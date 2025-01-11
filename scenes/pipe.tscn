@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cuk8xi30ei7gg"]
+
+[ext_resource type="PackedScene" uid="uid://cmicqm2o5a7ro" path="res://scenes/killbox.tscn" id="1_7sgcp"]
+[ext_resource type="Texture2D" uid="uid://ctejjqpuufbyp" path="res://assets/sprites/pipe-green.png" id="1_reyq8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pwrgb"]
+size = Vector2(44, 317)
+
+[node name="Pipe" instance=ExtResource("1_7sgcp")]
+
+[node name="Sprite2D" type="Sprite2D" parent="." index="0"]
+texture = ExtResource("1_reyq8")
+
+[node name="Killbox" type="CollisionShape2D" parent="." index="1"]
+position = Vector2(-2, 1.5)
+shape = SubResource("RectangleShape2D_pwrgb")

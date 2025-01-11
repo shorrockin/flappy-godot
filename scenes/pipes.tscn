@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://bt718obj4yos4"]
+
+[ext_resource type="PackedScene" uid="uid://cuk8xi30ei7gg" path="res://scenes/pipe.tscn" id="1_7j6p0"]
+[ext_resource type="Script" path="res://scripts/pipes.gd" id="1_qg0d2"]
+[ext_resource type="AudioStream" uid="uid://brfb2l7gjyfby" path="res://assets/audio/point.ogg" id="3_x7ub4"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_5lhpm"]
+a = Vector2(0, -64)
+b = Vector2(0, 108)
+
+[node name="pipes" type="Area2D"]
+light_mask = 4
+z_index = 1
+collision_mask = 2
+script = ExtResource("1_qg0d2")
+
+[node name="Bottom" parent="." instance=ExtResource("1_7j6p0")]
+position = Vector2(25, 159)
+
+[node name="Top" parent="." instance=ExtResource("1_7j6p0")]
+position = Vector2(24, -306)
+rotation = -3.14159
+
+[node name="ScoreBox" type="CollisionShape2D" parent="."]
+z_index = 1
+position = Vector2(47, -95)
+shape = SubResource("SegmentShape2D_5lhpm")
+
+[node name="Sfx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_x7ub4")
+
+[connection signal="body_entered" from="Bottom" to="Bottom" method="_on_body_entered"]
+[connection signal="body_entered" from="Top" to="Top" method="_on_body_entered"]

@@ -1,0 +1,171 @@
+[gd_scene load_steps=19 format=3 uid="uid://6jr4l3cwct5"]
+
+[ext_resource type="Texture2D" uid="uid://bxsq7vgtbfnt6" path="res://assets/sprites/background-day.png" id="1_2oa3v"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_5saqy"]
+[ext_resource type="PackedScene" uid="uid://4sburh75awgx" path="res://scenes/bird.tscn" id="2_0ukd6"]
+[ext_resource type="Script" path="res://scripts/parallax.gd" id="2_hdp3f"]
+[ext_resource type="PackedScene" uid="uid://cjybiwkawttj0" path="res://scenes/ground.tscn" id="3_h5k1y"]
+[ext_resource type="Script" path="res://scripts/score.gd" id="4_uk34a"]
+[ext_resource type="PackedScene" uid="uid://bt718obj4yos4" path="res://scenes/pipes.tscn" id="5_g8mne"]
+[ext_resource type="Texture2D" uid="uid://dytbjp4nyc8uu" path="res://assets/sprites/background-night.png" id="6_0nov2"]
+[ext_resource type="FontFile" uid="uid://cc1qpsy7baela" path="res://fonts/PixelOperator8-Bold.ttf" id="6_regg8"]
+[ext_resource type="Texture2D" uid="uid://cdmf4ctlxhs41" path="res://assets/sprites/message.png" id="10_ldvj3"]
+[ext_resource type="Texture2D" uid="uid://df1ieogyawok5" path="res://assets/sprites/gameover.png" id="11_t00w6"]
+
+[sub_resource type="Animation" id="Animation_ywy74"]
+resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_xnr0k"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ttgi2"]
+_data = {
+"RESET": SubResource("Animation_xnr0k"),
+"fade_in": SubResource("Animation_ywy74")
+}
+
+[sub_resource type="Animation" id="Animation_4f1rg"]
+resource_name = "fade"
+length = 30.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 12.0667, 29.9333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_8f5p1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ve627"]
+_data = {
+"RESET": SubResource("Animation_8f5p1"),
+"fade": SubResource("Animation_4f1rg")
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_6t1sg"]
+font = ExtResource("6_regg8")
+font_size = 30
+
+[node name="Game" type="Node"]
+script = ExtResource("1_5saqy")
+
+[node name="Splash" type="Node" parent="."]
+
+[node name="Start" type="Sprite2D" parent="Splash"]
+z_index = 99
+position = Vector2(142, 256)
+texture = ExtResource("10_ldvj3")
+
+[node name="GameOver" type="Sprite2D" parent="Splash"]
+visible = false
+z_index = 99
+position = Vector2(144, 258)
+texture = ExtResource("11_t00w6")
+
+[node name="Animation" type="AnimationPlayer" parent="Splash/GameOver"]
+libraries = {
+"": SubResource("AnimationLibrary_ttgi2")
+}
+
+[node name="Paralax" type="Node" parent="."]
+
+[node name="Background" type="Parallax2D" parent="Paralax"]
+repeat_size = Vector2(288, 0)
+autoscroll = Vector2(-20, 0)
+follow_viewport = false
+ignore_camera_scroll = true
+script = ExtResource("2_hdp3f")
+
+[node name="Day" type="Sprite2D" parent="Paralax/Background"]
+texture = ExtResource("1_2oa3v")
+centered = false
+
+[node name="Night" type="Sprite2D" parent="Paralax/Background"]
+texture = ExtResource("6_0nov2")
+centered = false
+
+[node name="Animation" type="AnimationPlayer" parent="Paralax/Background/Night"]
+libraries = {
+"": SubResource("AnimationLibrary_ve627")
+}
+autoplay = "fade"
+
+[node name="Forground" type="Parallax2D" parent="Paralax"]
+z_index = 2
+repeat_size = Vector2(288, 0)
+autoscroll = Vector2(-100, 0)
+follow_viewport = false
+ignore_camera_scroll = true
+script = ExtResource("2_hdp3f")
+is_background = false
+
+[node name="Ground" parent="Paralax/Forground" instance=ExtResource("3_h5k1y")]
+position = Vector2(152, 552)
+
+[node name="Pipes" type="Node" parent="."]
+
+[node name="pipes_one" parent="Pipes" instance=ExtResource("5_g8mne")]
+position = Vector2(289, 465)
+
+[node name="pipes_two" parent="Pipes" instance=ExtResource("5_g8mne")]
+position = Vector2(518, 379)
+
+[node name="Bird" parent="." instance=ExtResource("2_0ukd6")]
+visible = false
+z_index = 5
+position = Vector2(81, 237)
+
+[node name="Score" type="Label" parent="."]
+visible = false
+z_index = 10
+offset_top = 5.0
+offset_right = 289.0
+offset_bottom = 36.0
+text = "0"
+label_settings = SubResource("LabelSettings_6t1sg")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4_uk34a")
